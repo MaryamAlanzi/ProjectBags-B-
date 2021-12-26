@@ -9,3 +9,5 @@ const BagsModel = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("BagsModel", BagsModel);
+
+

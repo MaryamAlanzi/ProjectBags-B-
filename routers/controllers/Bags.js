@@ -1,37 +1,50 @@
 const BagsModel = require("../../db/models/BagsModel");
 
-
 const getBags = async (req, res) => {
   try {
-    const Bags = await BagsModel.find({})
+    const Bags = await BagsModel.find({});
     res.status(200).json(Bags);
+    console.log(Bags, "bagssss hereeee");
+  } catch (error) {
+    res.send(error);
+  }
+};
+
+const getBag = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const Bag = await BagsModel.findOne({ _id: id });
+    console.log(Bag);
+    res.status(200).json(Bag);
   } catch (error) {
     res.send(error);
   }
 };
 
 const postBags = async (req, res) => {
-  const { newname, newcolor, newimg, newdescription,newprice } = req.body;
- const newBags = BagsModel({
+  const { newname, newcolor, newimg, newdescription, newprice } = req.body;
+  const token = req.token.userId;
+  const newBags = new BagsModel({
     name: newname,
     color: newcolor,
-    description: newdescription,
     img: newimg,
-    price:newprice,
+    description: newdescription,
+    price: newprice,
   });
+  console.log("newBags : ", newBags);
   try {
-    const savedBags = await newBags.save();
-    res.status(200).json(savedBags);
+    const saved = await newBags.save();
+    res.status(200).json(saved);
   } catch (error) {
     res.send(error);
   }
 };
 
 const deleteBags = async (req, res) => {
-  const id = req.params.id;
+  const p = req.params.f;
   try {
-    const del = await BagsModel.findOneAndDelete({ _id: id });
-    console.log(del)
+    const del = await BagsModel.findOneAndDelete({ _id: p });
+    console.log(del);
     if (del) {
       res.send("deleted");
     } else {
@@ -42,4 +55,4 @@ const deleteBags = async (req, res) => {
   }
 };
 
-module.exports = { getBags, postBags, deleteBags,  };
+module.exports = { getBags, postBags, deleteBags, getBag };
