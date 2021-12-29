@@ -5,7 +5,8 @@ const { getBags,getBag, postBags, deleteBags,getcart } = require("../controllers
 const {authentication} = require("../middlewares/authentication")
 
 BagsRoute.get("/Bags", getBags);
-BagsRoute.get("/Bag:id", getBag);
+BagsRoute.get("/Bag/:id", getBag);
+
 BagsRoute.post("/Bags",authentication,postBags);
 BagsRoute.delete("/Bag/:f", deleteBags);
 // BagsRoute.get("/cart/:id",authentication, getcart);

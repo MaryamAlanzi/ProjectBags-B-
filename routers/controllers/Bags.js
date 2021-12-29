@@ -9,17 +9,16 @@ const getBags = async (req, res) => {
     res.send(error);
   }
 };
-
-const getBag = async (req, res) => {
-  const { id } = req.params;
+const getBag = async (req,res)=>{
+  const {id} = req.params
   try {
-    const Bag = await BagsModel.findOne({ _id: id });
-    console.log(Bag);
-    res.status(200).json(Bag);
-  } catch (error) {
-    res.send(error);
+       const  Bag = await BagsModel.findOne({ _id:id})
+       console.log(Bag,"BAG");
+      res.status(200).json( Bag)
+  } catch (error){
+      res.send(error)
   }
-};
+}
 
 const postBags = async (req, res) => {
   const { newname, newcolor, newimg, newdescription, newprice } = req.body;
