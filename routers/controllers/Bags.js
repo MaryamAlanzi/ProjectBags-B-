@@ -13,7 +13,7 @@ const getBag = async (req,res)=>{
   const {id} = req.params
   try {
        const  Bag = await BagsModel.findOne({ _id:id})
-       console.log(Bag,"BAG");
+       console.log(Bag);
       res.status(200).json( Bag)
   } catch (error){
       res.send(error)
@@ -54,4 +54,31 @@ const deleteBags = async (req, res) => {
   }
 };
 
-module.exports = { getBags, postBags, deleteBags, getBag };
+const UpdeteBags = async (req, res) => {
+  const id = req.params.id;
+  const { newname, newcolor, newimg, newdescription, newprice } = req.body;
+  try {
+    const Bags = await BagsModel.findOneAndUpdate({ _id: id },
+      {  name:newname, color:newcolor, img:newimg, description:newdescription, price:newprice},{new:true}
+      
+    );
+    res.status(201).json(Bags);
+  } catch (error) {
+    res.send({error});
+  }
+};
+
+const addBags=async (req, res) =>{
+
+
+}
+
+
+
+
+
+
+
+
+
+module.exports = { getBags, postBags, deleteBags, getBag,UpdeteBags,addBags };
