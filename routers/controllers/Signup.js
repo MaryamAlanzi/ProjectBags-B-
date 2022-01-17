@@ -3,15 +3,15 @@ const bcrypt = require("bcrypt");
 
 
 // احتاج سكيما اليوزر عشان اسوي لها طلب تجيب لي القيم الجديده من الادد ساين وتخزنها فيها
-const userModel  = require("../../db/models/userModel")
+const UserModel  = require("../../db/models/UserModel")
 
 //  فنكشن جديد يسوي تسجيل ياخذ الاسم والايميل والباسوردمن البودي
 const addsignup = async(req, res) => {
   let { name, email, x } = req.body;
   try {
       x = await bcrypt.hash(x,10);
-    const newUser = new userModel({ name, email, password:x })
-   // const newUser = new userModel({ name:name, email:email, password:x})
+    const newUser = new UserModel({ name, email, password:x ,cart:[] , cartTraval:[] })
+   // const newUser = new UserModel({ name:name, email:email, password:x})
 
    
     // الباسورد ياخذ وقت وبعدين يستخدم البيكربت والهاش

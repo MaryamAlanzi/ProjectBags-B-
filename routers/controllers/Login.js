@@ -1,12 +1,12 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const userModel = require("../../db/models/userModel");
+const UserModel = require("../../db/models/UserModel");
 let Admin = "Maryam.com"
 
 const login = async (req, res) => {
   let { e, pp } = req.body;
   try {
-    const farh = await userModel.findOne({ email:e});
+    const farh = await UserModel.findOne({ email:e});
     if(Admin == e){
       const see = await bcrypt.compare(pp, farh.password);
       if (see == true) {
@@ -35,6 +35,7 @@ const login = async (req, res) => {
        
         // console.log(payload)
         const token = jwt.sign(payload, "AAA");
+        console.log(token,"tokkkeeeen")
         res.status(200).json({ token });
      
       } else {

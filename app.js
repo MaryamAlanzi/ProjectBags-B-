@@ -8,11 +8,12 @@ app.use(cors());
 const BagsRoute = require("./routers/routes/BagsRoute");
 const SignupRoute = require("./routers/routes/SignupRoute");
 const LoginRoute  = require("./routers/routes/LoginRoute")
+const TravalBagsRoute = require("./routers/routes/TravalBagsRoute")
 
 app.use(BagsRoute);
 app.use(SignupRoute);
 app.use(LoginRoute);
-
+app.use(TravalBagsRoute);
 
 
 

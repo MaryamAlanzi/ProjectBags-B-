@@ -1,19 +1,19 @@
-const BagsModel = require("../../db/models/BagsModel");
+const TravalBagsModel = require("../../db/models/TravalBagsModel");
 const UserModel = require("../../db/models/UserModel");
 
-const getBags = async (req, res) => {
+const getTravalBags = async (req, res) => {
   try {
-    const Bags = await BagsModel.find({});
+    const Bags = await TravalBagsModel.find({});
     res.status(200).json(Bags);
     console.log(Bags, "bagssss hereeee");
   } catch (error) {
     res.send(error);
   }
 };
-const getBag = async (req, res) => {
+const getTravalBag = async (req, res) => {
   const { id } = req.params;
   try {
-    const Bag = await BagsModel.findOne({ _id: id });
+    const Bag = await TravalBagsModel.findOne({ _id: id });
     console.log(Bag);
     res.status(200).json(Bag);
   } catch (error) {
@@ -21,10 +21,10 @@ const getBag = async (req, res) => {
   }
 };
 
-const postBags = async (req, res) => {
+const postTravalBags = async (req, res) => {
   const { newname, newcolor, newimg, newdescription, newprice } = req.body;
   const token = req.token.userId;
-  const newBags = new BagsModel({
+  const newBags = new TravalBagsModel({
     name: newname,
     color: newcolor,
     img: newimg,
@@ -35,15 +35,49 @@ const postBags = async (req, res) => {
   try {
     const saved = await newBags.save();
     res.status(200).json(saved);
+    console.log(res.data, "hhhhhhhhh");
   } catch (error) {
     res.send(error);
   }
 };
 
-const deleteBags = async (req, res) => {
-  const p = req.params.f;
+const getcartt = async (req, res) => {
+  const userId = req.token.userId;
+
   try {
-    const del = await BagsModel.findOneAndDelete({ _id: p });
+    const cartTraval = await UserModel.findOne({ _id: userId }).populate(
+      "cartTraval"
+    );
+    res.status(200).json(cartTraval.cartTraval);
+    console.log("Done ", cartTraval.cartTraval);
+  } catch (error) {
+    res.send(error);
+  }
+};
+
+const addCart = async (req, res) => {
+  console.log("mmmmmm");
+
+  const id = req.params.id;
+  const userId = req.token.userId;
+  try {
+    const newcart = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      { $push: { cartTraval: id } },
+      { new: true }
+    );
+    console.log(newcart, "cartTtttttt");
+
+    res.status(201).json(newcart);
+  } catch (error) {
+    res.send(error);
+  }
+};
+
+const deleteTravalBags = async (req, res) => {
+  const p = req.params.id;
+  try {
+    const del = await TravalBagsModel.findOneAndDelete({ _id: p });
     console.log(del);
     if (del) {
       res.send("deleted");
@@ -55,75 +89,19 @@ const deleteBags = async (req, res) => {
   }
 };
 
-const UpdeteBags = async (req, res) => {
-  const id = req.params.id;
-  const { newname, newcolor, newimg, newdescription, newprice } = req.body;
-  try {
-    const Bags = await BagsModel.findOneAndUpdate(
-      { _id: id },
-      {
-        name: newname,
-        color: newcolor,
-        img: newimg,
-        description: newdescription,
-        price: newprice,
-      },
-      { new: true }
-    );
-    res.status(201).json(Bags);
-  } catch (error) {
-    res.send({ error });
-  }
-};
-
-const getcart = async (req, res) => {
-  const userId = req.token.userId;
-  try {
-    const getBags = await UserModel.findOne({ _id: userId }).populate('cart');
-    res.status(200).json(getBags.cart);
-    console.log(getBags, "done cart ");
-  } catch (error) {
-    res.send(error);
-  }
-};
-
-const addcart = async (req, res) => {
-  console.log("mmmmmm");
-  console.log(req.token, req.params, "mmmmmm");
-
-  const id = req.params.id;
-  const userId = req.token.userId;
-  try {
-    const newCart = await UserModel.findOneAndUpdate(
-      { _id: userId },
-      { $push: { cart: id } },
-      { new: true }
-    );
-    console.log(newCart, "carrrrrrt");
-
-    res.status(201).json(newCart);
-    
-  } catch (error) {
-    res.send(error);
-  }
-};
-
-
-
-
-const removcart = async (req, res) => {
+const deleteCart = async (req, res) => {
   const id = req.params.id;
   const userId = req.token.userId;
   console.log(id);
-  console.log(userId,"ggg");
+  console.log(userId, "ggg");
   try {
     const uncart = await UserModel.findOneAndUpdate(
       { _id: userId },
-      { $pull: { cart: id } },
+      { $pull: { cartTraval: id } },
       { new: true }
     );
-    console.log(uncart, "delll");
-    res.status(200).json(uncart);
+    
+    res.status(200).json([uncart, "dellll"]);
     console.log("delll");
   } catch (error) {
     res.send(error);
@@ -131,14 +109,14 @@ const removcart = async (req, res) => {
 };
 
 
-const AddBagCommint = async (req, res) => {
+const AddTBagCommint = async (req, res) => {
   try {
     const { Commint } = req.body;
     const id = req.params.id;
     const user = req.token.userId;
     const userName = req.token.userName;
     console.log(id, user, userName);
-    const response = await BagsModel.findOneAndUpdate(
+    const response = await TravalBagsModel.findOneAndUpdate(
       { _id: id },
       { $push: { Commint: { Commint, userName, user } } },
       { new: true }
@@ -151,14 +129,17 @@ const AddBagCommint = async (req, res) => {
 };
 
 
-const deleteBagCommint = async (req, res) => {
+
+
+
+const deleteTBagCommint = async (req, res) => {
   try {
     const { Commint } = req.body;
     const id = req.params.id;
     const user = req.token.userId;
     const userName = req.token.userName;
     console.log(id, user, userName);
-    const response = await BagsModel.findOneAndUpdate(
+    const response = await TravalBagsModel.findOneAndUpdate(
       { _id: id },
       { $pull: { Commint: { Commint, userName, user } } },
       { new: true }
@@ -171,4 +152,14 @@ const deleteBagCommint = async (req, res) => {
   }
 };
 
-module.exports = {getBags, postBags,deleteBags,getBag,UpdeteBags, getcart,addcart, removcart,AddBagCommint,deleteBagCommint};
+
+
+
+
+
+
+
+
+
+module.exports = { getTravalBags, postTravalBags, deleteTravalBags, getTravalBag, addCart, getcartt, deleteCart,AddTBagCommint,deleteTBagCommint};
+
